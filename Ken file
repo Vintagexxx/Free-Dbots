@@ -1,0 +1,37 @@
+import random
+
+class MartingaleTrader:
+    def __init__(self, starting_balance, starting_bet, target_profit):
+        self.balance = starting_balance
+        self.current_bet = starting_bet
+        self.target_profit = target_profit
+        self.total_profit = 0
+
+    def trade(self):
+        while self.balance > 0 and self.total_profit < self.target_profit:
+            # Simulating a win/loss scenario
+            outcome = random.choice(['win', 'lose'])
+            if outcome == 'win':
+                self.balance += self.current_bet
+                self.total_profit += self.current_bet
+                print(f"Win! New balance: {self.balance}, Total profit: {self.total_profit}")
+                self.current_bet = starting_bet  # Reset bet after a win
+            else:
+                self.balance -= self.current_bet
+                print(f"Lose. New balance: {self.balance}")
+                self.current_bet *= 2  # Double the bet after a loss
+
+            if self.balance < self.current_bet:  # If not enough balance to place the next bet
+                print("Not enough balance to continue betting.")
+                break
+
+        print(f"Final balance: {self.balance}, Total profit: {self.total_profit}")
+
+# Example usage
+starting_balance = 1000
+starting_bet = 10
+target_profit = 200
+
+trader = MartingaleTrader(starting_balance, starting_bet, target_profit)
+trader.trade()
+```
