@@ -1,0 +1,40 @@
+import requests
+
+# Initialize variables
+stake = 10
+initial_stake = 10
+balance = 1000  # Example starting balance
+current_loss = 0
+
+# Function to place a trade
+def place_trade(stake, contract_type):
+    url = 'https://api.deriv.com/binary'
+    data = {
+        'stake': stake,
+        'contract_type': contract_type,
+        'duration': 1,  # Adjust duration as needed
+        'market': 'R_50',  # Example market, adjust as needed
+    }
+    response = requests.post(url, data=data)
+    return response.json()
+
+# Function to check the trade result
+def check_result(trade_id):
+    url = f'https://api.deriv.com/binary/{trade_id}'
+    response = requests.get(url)
+    result = response.json().get('result')
+    return result
+
+# Trading loop
+while balance > 0:
+    trade = place_trade(stake, 'DIGITODD')
+    trade_id = trade.get('id')
+    result = check_result(trade_id)
+    
+    if result == 'win':
+        balance += stake
+        stake = initial_stake
+        current_loss = 0
+    else:
+        balance -= stake
+        stake *= 2  # Martingale strategy
